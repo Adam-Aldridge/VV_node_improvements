@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "id": "user-aaba6e67-6b82-48ef-ac3f-3fd9aade7431",
+      "username": "Adam",
+      "password": "$2b$10$Q/IU7IYAAUPYukHt7uQ/8ugyLCuKpYQoK.3Vw8DjPh2iLoDCq0INW",
+      "subpages": [
+        {
+          "id": "subpage-1748305040945",
+          "name": "ads",
+          "posts": [
+            {
+              "id": "post-1748305052007",
+              "title": "asd",
+              "description": "adds",
+              "previewImage": "/uploads/user-aaba6e67-6b82-48ef-ac3f-3fd9aade7431/previews/1748305051988-339262574-logo-lotus.png.png",
+              "filePath": "/uploads/user-aaba6e67-6b82-48ef-ac3f-3fd9aade7431/files/1748305051996-832649471-Lotusseedprompts.pdf.pdf"
+            }
+          ]
+        },
+        {
+          "id": "subpage-1748345152810",
+          "name": "page",
+          "posts": [
+            {
+              "id": "post-1748345168559",
+              "title": "post ",
+              "description": "des",
+              "previewImage": "/uploads/user-aaba6e67-6b82-48ef-ac3f-3fd9aade7431/previews/1748345168553-96427102-logo-lotus.png.png",
+              "filePath": "/uploads/user-aaba6e67-6b82-48ef-ac3f-3fd9aade7431/files/1748345168557-33680442-Lotusseedprompts.pdf.pdf"
+            }
+          ]
+        },
+        {
+          "id": "subpage-1749531839850",
+          "name": "nn",
+          "posts": []
+        }
+      ]
+    }
+  ],
+  "adminCredentials": {
+    "username": "admin",
+    "password": "admin123"
+  }
+}

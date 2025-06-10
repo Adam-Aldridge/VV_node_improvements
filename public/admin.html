@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portfolio Showcase</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+        <nav><a href="/landing.html">Back to Main App / Landing</a></nav>
+    </header>
+
+    <main id="admin-content">
+        <div class="admin-auth-section">
+            <h2>Admin Login</h2>
+            <input type="text" id="admin-username" placeholder="Admin Username" value="admin">
+            <input type="password" id="admin-password" placeholder="Admin Password">
+            <button id="admin-login-btn">Login / Authenticate</button>
+            <p id="admin-auth-status" style="display:none; margin-top:10px;"></p>
+        </div>
+
+        <div class="admin-dashboard" style="display:none;">
+            <section class="user-management">
+                <h2>User Management</h2>
+                
+                <!-- User Creation Form Removed -->
+                <div class="info-message" style="background-color: #e9ecef; padding: 10px; border-radius: 4px; margin-bottom: 20px; text-align: center;">
+                    <p><em>User creation is handled through self-registration on the <a href="/landing.html">main landing page</a>.</em></p>
+                    <p><em>Admins can view and delete existing users below.</em></p>
+                </div>
+
+                <h3>Existing Users</h3>
+                <ul id="user-list">
+                    <!-- Users will be listed here -->
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2023 Your Name - Admin</p>
+    </footer>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

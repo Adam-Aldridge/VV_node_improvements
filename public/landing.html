@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-T">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Portfolio Showcase</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .auth-container button {
+            width: 100%;
+            padding: 10px;
+        }
+        .toggle-auth {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .toggle-auth a {
+            color: #007bff;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Portfolio Showcase</h1>
+    </header>
+
+    <main>
+        <div class="auth-container" id="login-container">
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            <div class="toggle-auth">
+                Don't have an account? <a id="show-register">Register here</a>
+            </div>
+        </div>
+
+        <div class="auth-container" id="register-container" style="display:none;">
+            <h2>Register</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password (min 6 chars)</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            <div class="toggle-auth">
+                Already have an account? <a id="show-login">Login here</a>
+            </div>
+        </div>
+        <div id="message" style="display:none;"></div>
+    </main>
+
+    <footer>
+        <p>© 2023 Your Name</p>
+    </footer>
+
+    <script src="js/landing-auth.js"></script>
+</body>
+</html>

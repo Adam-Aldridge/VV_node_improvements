@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Showcase</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>My Portfolio Showcase</h1>
+        <nav>
+            <span id="username-display" style="color: white; margin-right: 20px; padding: 5px 0;"></span>
+            <a href="/admin.html" style="margin-right:10px; color: white; text-decoration: none;">Admin Panel</a>
+            <button id="logout-btn" style="padding: 5px 10px; background-color: #dc3545; color:white; border:none; border-radius: 3px; cursor:pointer;">Logout</button>
+        </nav>
+    </header>
+
+    <main id="app-content">
+        <!-- Content will be dynamically rendered here -->
+        <div class="loading">Loading portfolio...</div>
+    </main>
+
+    <footer>
+        <p>© 2023 Your Name</p>
+    </footer>
+
+    <!-- Templates -->
+    <template id="dashboard-template">
+        <div class="dashboard">
+            <h2>Dashboard - <span class="current-user-subpages-title">My Subpages</span></h2>
+            <div class="actions">
+                <h3>Create New Subpage</h3>
+                <form id="create-subpage-form">
+                    <input type="text" id="new-subpage-name" placeholder="Subpage Name" required>
+                    <button type="submit">Create Subpage</button>
+                </form>
+            </div>
+            <ul id="subpage-list" class="subpage-list">
+                <!-- Subpages will be listed here -->
+            </ul>
+        </div>
+    </template>
+
+    <template id="subpage-item-template">
+        <li class="subpage-item">
+            <span class="subpage-name"></span>
+            <div class="subpage-actions">
+                <button class="view-subpage-btn">View</button>
+                <button class="delete-subpage-btn">Delete</button>
+            </div>
+        </li>
+    </template>
+
+    <template id="subpage-detail-template">
+        <div class="subpage-detail">
+            <button id="back-to-dashboard-btn">← Back to Dashboard</button>
+            <h2 id="subpage-title"></h2>
+            
+            <div class="actions">
+                <h3>Add New Post</h3>
+                <form id="create-post-form" enctype="multipart/form-data">
+                    <input type="text" id="new-post-title" name="title" placeholder="Post Title" required>
+                    <textarea id="new-post-description" name="description" placeholder="Short Description" required></textarea>
+                    <div>
+                        <label for="new-post-preview">Preview Image (Optional):</label>
+                        <input type="file" id="new-post-preview" name="previewImageFile" accept="image/*">
+                    </div>
+                    <div>
+                        <label for="new-post-file">Main File (PDF, Image, HTML):</label>
+                        <input type="file" id="new-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm" required>
+                    </div>
+                    <button type="submit">Add Post</button>
+                </form>
+            </div>
+
+            <h3>Posts</h3>
+            <div id="post-grid" class="post-grid">
+                <!-- Posts will be rendered here -->
+            </div>
+        </div>
+    </template>
+
+    <template id="post-item-template">
+        <div class="post-card">
+            <a class="post-link" href="#" target="_blank">
+                <img src="placeholder.png" alt="Post preview" class="post-preview-img">
+                <h4 class="post-title"></h4>
+                <p class="post-description"></p>
+            </a>
+            <button class="delete-post-btn">Delete Post</button>
+        </div>
+    </template>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
