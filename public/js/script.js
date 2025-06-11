@@ -119,9 +119,34 @@ document.addEventListener('DOMContentLoaded', () => {
             posts.forEach(post => {
                 const postTemplate = document.getElementById('post-item-template').content.cloneNode(true);
                 const postCard = postTemplate.querySelector('.post-card');
-
                 const postLink = postCard.querySelector('.post-link');
-                postLink.href = post.filePath; // Link to the main file
+
+                // --- New logic for setting the link ---
+                let linkTarget = null;
+                let opensInNewTab = false;
+
+                if (post.url && post.url.trim() !== '') {
+                    // Priority 1: Use the external URL
+                    linkTarget = post.url;
+                    opensInNewTab = true;
+                } else if (post.filePath) {
+                    // Priority 2: Use the uploaded file path
+                    linkTarget = post.filePath;
+                    opensInNewTab = true;
+                }
+
+                if (linkTarget) {
+                    postLink.href = linkTarget;
+                    if (opensInNewTab) {
+                        postLink.target = '_blank';
+                        postLink.rel = 'noopener noreferrer';
+                    }
+                } else {
+                    // If there is no link or file, make the card non-clickable
+                    postLink.removeAttribute('href');
+                    postLink.style.cursor = 'default';
+                }
+                // --- End of new logic ---
 
                 const img = postCard.querySelector('.post-preview-img');
                 img.src = post.previewImage || 'https://via.placeholder.com/300x180.png?text=No+Preview';
@@ -215,33 +240,55 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleCreatePost = async (event, subpageId) => {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        // userId is implicitly handled by the backend via JWT, associated with API_ME_BASE_URL
+    event.preventDefault();
+    const form = event.target;
 
-        if (!formData.get('title') || !formData.get('description') || !formData.get('mainFile').name) {
-             alert('Title, description, and main file are required.');
-             return;
-        }
+    const formData = new FormData();
+    formData.append('title', form.querySelector('#new-post-title').value);
+    formData.append('description', form.querySelector('#new-post-description').value);
 
-        try {
-            const response = await fetchWithAuth(`${API_ME_BASE_URL}/subpages/${subpageId}/posts`, {
-                method: 'POST',
-                body: formData // fetchWithAuth handles headers correctly for FormData
-            });
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({message: "Error creating post."}));
-                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-            }
-            await response.json(); // newPost data
-            form.reset();
-            fetchDataAndNavigate(); // Refresh current subpage view
-        } catch (error) {
-            console.error("Error creating post:", error);
-            alert(`Error creating post: ${error.message}`);
+    // --- NEW: Process the URL to add https:// if needed ---
+    let urlValue = form.querySelector('#new-post-url').value.trim();
+    
+    formData.append('url', urlValue);
+    // --- END: URL processing ---
+
+    // Append preview image if one is selected
+    const previewInput = form.querySelector('#new-post-preview');
+    if (previewInput.files.length > 0) {
+        formData.append('previewImageFile', previewInput.files[0]);
+    }
+
+    // Append main file if one is selected
+    const mainFileInput = form.querySelector('#new-post-file');
+    if (mainFileInput.files.length > 0) {
+        formData.append('mainFile', mainFileInput.files[0]);
+    }
+
+    // --- REMOVED: The validation for requiring a file or URL has been deleted ---
+    // The only remaining validation is for title and description.
+    if (!formData.get('title') || !formData.get('description')) {
+        alert('Title and description are required.');
+        return;
+    }
+
+    try {
+        const response = await fetchWithAuth(`${API_ME_BASE_URL}/subpages/${subpageId}/posts`, {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: "Error creating post." }));
+            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
-    };
+        await response.json();
+        form.reset();
+        fetchDataAndNavigate();
+    } catch (error) {
+        console.error("Error creating post:", error);
+        alert(`Error creating post: ${error.message}`);
+    }
+};
 
     const deletePost = async (subpageId, postId) => {
         if (!confirm('Are you sure you want to delete this post? This cannot be undone.')) return;

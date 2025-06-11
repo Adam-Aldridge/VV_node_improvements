@@ -235,48 +235,66 @@ app.delete('/api/me/subpages/:subpageId', authenticateToken, async (req, res) =>
     res.status(200).json({ message: "Subpage deleted." });
 });
 
+// The updated route handler
 app.post('/api/me/subpages/:subpageId/posts', authenticateToken, upload.fields([
     { name: 'previewImageFile', maxCount: 1 },
     { name: 'mainFile', maxCount: 1 }
 ]), async (req, res) => {
     const userId = req.user.id;
     const { subpageId } = req.params;
-    const { title, description } = req.body;
+    
+    // --- CHANGE 1: Get the new 'url' field from the request body ---
+    const { title, description, url } = req.body;
+    
+    // --- CHANGE 2: Safely access the uploaded files ---
+    const previewImageFile = req.files && req.files.previewImageFile ? req.files.previewImageFile[0] : null;
+    const mainFile = req.files && req.files.mainFile ? req.files.mainFile[0] : null;
+
     if (!title || !description) {
         return res.status(400).json({ message: "Title and description are required." });
     }
-    if (!req.files || !req.files.mainFile || !req.files.mainFile[0]) {
-        if (req.files && req.files.previewImageFile && req.files.previewImageFile[0]) {
-            await deleteSingleFile(path.join(userId, 'previews', req.files.previewImageFile[0].filename));
-        }
-        return res.status(400).json({ message: "Main file is required." });
-    }
+
+    // --- CHANGE 3: Update the validation logic ---
+    // // Now, we require either a file OR a URL, not necessarily a file.
+    // if (!mainFile && !url) {
+    //     // Cleanup any preview image that might have been uploaded
+    //     if (previewImageFile) {
+    //         await deleteSingleFile(path.join(userId, 'previews', previewImageFile.filename));
+    //     }
+    //     return res.status(400).json({ message: "A main file or a URL is required." });
+    // }
+
     const data = await readData();
     const user = data.users.find(u => u.id === userId);
+
     if (!user || !user.subpages) {
-        await deleteSingleFile(path.join(userId, 'files', req.files.mainFile[0].filename));
-        if (req.files.previewImageFile && req.files.previewImageFile[0]) {
-            await deleteSingleFile(path.join(userId, 'previews', req.files.previewImageFile[0].filename));
-        }
+        // Cleanup any uploaded files if the user/subpage structure is broken
+        if (mainFile) await deleteSingleFile(path.join(userId, 'files', mainFile.filename));
+        if (previewImageFile) await deleteSingleFile(path.join(userId, 'previews', previewImageFile.filename));
         return res.status(404).json({ message: "User or subpage data structure not found." });
     }
+
     const subpage = user.subpages.find(sp => sp.id === subpageId);
     if (!subpage) {
-        await deleteSingleFile(path.join(userId, 'files', req.files.mainFile[0].filename));
-        if (req.files.previewImageFile && req.files.previewImageFile[0]) {
-            await deleteSingleFile(path.join(userId, 'previews', req.files.previewImageFile[0].filename));
-        }
+        // Cleanup any uploaded files if the subpage is not found
+        if (mainFile) await deleteSingleFile(path.join(userId, 'files', mainFile.filename));
+        if (previewImageFile) await deleteSingleFile(path.join(userId, 'previews', previewImageFile.filename));
         return res.status(404).json({ message: "Subpage not found." });
     }
+
+    // --- CHANGE 4: Create the new post object with optional properties ---
     const newPost = {
         id: `post-${Date.now()}`,
         title,
         description,
-        previewImage: req.files.previewImageFile ? `/uploads/${userId}/previews/${req.files.previewImageFile[0].filename}` : null,
-        filePath: `/uploads/${userId}/files/${req.files.mainFile[0].filename}`
+        previewImage: previewImageFile ? `/uploads/${userId}/previews/${previewImageFile.filename}` : null,
+        filePath: mainFile ? `/uploads/${userId}/files/${mainFile.filename}` : null, // Will be null if no file
+        url: url || null // Will be null if no URL was provided
     };
+
     subpage.posts.push(newPost);
     await writeData(data);
+
     res.status(201).json(newPost);
 });
 
@@ -297,6 +315,14 @@ app.delete('/api/me/subpages/:subpageId/posts/:postId', authenticateToken, async
     await writeData(data);
     res.status(200).json({ message: "Post deleted." });
 });
+
+
+
+
+
+
+
+
 
 // === ADMIN API Endpoints ===
 app.get('/api/admin/users', adminAuth, async (req, res) => {

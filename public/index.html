@@ -60,18 +60,29 @@
             <div class="actions">
                 <h3>Add New Post</h3>
                 <form id="create-post-form" enctype="multipart/form-data">
-                    <input type="text" id="new-post-title" name="title" placeholder="Post Title" required>
-                    <textarea id="new-post-description" name="description" placeholder="Short Description" required></textarea>
-                    <div>
-                        <label for="new-post-preview">Preview Image (Optional):</label>
-                        <input type="file" id="new-post-preview" name="previewImageFile" accept="image/*">
-                    </div>
-                    <div>
-                        <label for="new-post-file">Main File (PDF, Image, HTML):</label>
-                        <input type="file" id="new-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm" required>
-                    </div>
-                    <button type="submit">Add Post</button>
-                </form>
+                <input type="text" id="new-post-title" name="title" placeholder="Post Title" required>
+                <textarea id="new-post-description" name="description" placeholder="Short Description" required></textarea>
+                <div>
+                    <label for="new-post-preview">Preview Image (Optional):</label>
+                    <input type="file" id="new-post-preview" name="previewImageFile" accept="image/*">
+                </div>
+                
+                <!-- Change 1: The 'mainFile' input is no longer required -->
+                <div>
+                    <label for="new-post-file">Upload Main File:</label>
+                    <input type="file" id="new-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm">
+                </div>
+
+                <p style="text-align: center; margin: 0.5em 0;"><em>or</em></p>
+
+                <!-- Change 2: Add the new URL input field -->
+                <div>
+                    <label for="new-post-url">Link to URL:</label>
+                    <input type="text" id="new-post-url" name="url" placeholder="https://example.com/project-page">
+                </div>
+                
+                <button type="submit">Add Post</button>
+            </form>
             </div>
 
             <h3>Posts</h3>
