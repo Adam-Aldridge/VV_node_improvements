@@ -60,14 +60,14 @@ button {
 button:hover {
     background-color: #0056b3;
 }
-button.delete-subpage-btn, button.delete-post-btn {
+button.delete-subpage-btn {
     background-color: #dc3545;
 }
-button.delete-subpage-btn:hover, button.delete-post-btn:hover {
+button.delete-subpage-btn:hover {
     background-color: #c82333;
 }
 
-input[type="text"], textarea, input[type="file"] {
+input[type="text"], input[type="url"], textarea, input[type="file"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -90,7 +90,6 @@ textarea {
 .dashboard h2, .subpage-detail h2 {
     margin-bottom: 20px;
     color: #333;
-    border-bottom: 2px solid #007bff;
     padding-bottom: 10px;
 }
 .actions {
@@ -127,6 +126,27 @@ textarea {
 }
 
 /* Subpage Detail */
+.subpage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+   
+}
+
+#open-add-post-modal-btn {
+    padding: 8px 15px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#open-add-post-modal-btn:hover {
+    background-color: #218838;
+}
+
 #back-to-dashboard-btn {
     margin-bottom: 20px;
     background-color: #6c757d;
@@ -150,6 +170,7 @@ textarea {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
+    position: relative; /* This is the positioning context for the buttons */
 }
 .post-card:hover {
     transform: translateY(-5px);
@@ -159,13 +180,13 @@ textarea {
     display: block;
     text-decoration: none;
     color: inherit;
-    flex-grow: 1; /* Make the link take available space */
+    flex-grow: 1;
 }
 .post-preview-img {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    background-color: #e9ecef; /* Placeholder color */
+    background-color: #e9ecef;
     border-bottom: 1px solid #eee;
 }
 .post-card h4, .post-card p {
@@ -181,11 +202,99 @@ textarea {
     font-size: 0.9em;
     color: #666;
     margin-bottom: 15px;
-    flex-grow: 1; /* Push delete button to bottom if description is short */
+    flex-grow: 1;
 }
-.post-card .delete-post-btn {
-    display: block;
-    width: calc(100% - 30px); /* Account for padding */
-    margin: 0 15px 15px 15px; /* Bottom margin and side padding */
-    text-align: center;
+
+/* New Styles for Post Action Buttons */
+.post-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    display: flex;
+    gap: 6px;
+}
+.post-card:hover .post-actions {
+    opacity: 1;
+}
+.post-actions button {
+    padding: 5px 10px;
+    font-size: 0.85em;
+    border-radius: 5px;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+.post-actions .edit-post-btn {
+    background-color: rgba(0, 123, 255, 0.8);
+}
+.post-actions .edit-post-btn:hover {
+    background-color: rgba(0, 123, 255, 1);
+}
+.post-actions .delete-post-btn {
+    background-color: rgba(220, 53, 69, 0.8);
+}
+.post-actions .delete-post-btn:hover {
+    background-color: rgba(220, 53, 69, 1);
+}
+
+/* --- MODAL STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #333;
+}
+
+#edit-post-form div, #create-post-form div {
+    margin-bottom: 1rem;
+}
+
+#edit-post-form hr {
+    margin: 1.5rem 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
+.current-file-info {
+    font-size: 0.9em;
+    color: #555;
+    background-color: #f4f4f4;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+.input-deemphasized {
+    background-color: #f0f0f0;
+    opacity: 0.6;
+    border-color: #ddd;
 }

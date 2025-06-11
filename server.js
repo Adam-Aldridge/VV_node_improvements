@@ -318,7 +318,77 @@ app.delete('/api/me/subpages/:subpageId/posts/:postId', authenticateToken, async
 
 
 
+app.put('/api/me/subpages/:subpageId/posts/:postId', authenticateToken, upload.fields([
+    { name: 'previewImageFile', maxCount: 1 },
+    { name: 'mainFile', maxCount: 1 }
+]), async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { subpageId, postId } = req.params;
+        // Get the new `clearFile` flag from the body
+        const { title, description, url, clearFile } = req.body;
 
+        if (!title || !description) {
+            return res.status(400).json({ message: "Title and description are required." });
+        }
+
+        const data = await readData();
+        const user = data.users.find(u => u.id === userId);
+        if (!user) return res.status(404).json({ message: "User not found." });
+
+        const subpage = user.subpages.find(sp => sp.id === subpageId);
+        if (!subpage) return res.status(404).json({ message: "Subpage not found." });
+
+        const postIndex = subpage.posts.findIndex(p => p.id === postId);
+        if (postIndex === -1) return res.status(404).json({ message: "Post not found." });
+
+        const postToUpdate = subpage.posts[postIndex];
+
+        // --- Handle Preview Image Update ---
+        if (req.files && req.files.previewImageFile) {
+            if (postToUpdate.previewImage) {
+                const oldPreviewFilename = path.basename(postToUpdate.previewImage);
+                await deleteSingleFile(path.join(userId, 'previews', oldPreviewFilename));
+            }
+            postToUpdate.previewImage = `/uploads/${userId}/previews/${req.files.previewImageFile[0].filename}`;
+        }
+
+        // --- NEW STREAMLINED FILE/URL LOGIC ---
+        // Case 1: A new main file is uploaded.
+        if (req.files && req.files.mainFile) {
+            // Delete the old file if it exists.
+            if (postToUpdate.filePath) {
+                const oldMainFilename = path.basename(postToUpdate.filePath);
+                await deleteSingleFile(path.join(userId, 'files', oldMainFilename));
+            }
+            // Set the new file path and clear the URL.
+            postToUpdate.filePath = `/uploads/${userId}/files/${req.files.mainFile[0].filename}`;
+            postToUpdate.url = null;
+        } 
+        // Case 2: No new file is uploaded, but the user explicitly wants to switch to a URL.
+        else if (clearFile === 'true' && postToUpdate.filePath) {
+            const oldMainFilename = path.basename(postToUpdate.filePath);
+            await deleteSingleFile(path.join(userId, 'files', oldMainFilename));
+            postToUpdate.filePath = null;
+            postToUpdate.url = url || null;
+        }
+        // Case 3: No new file, just update the URL.
+        else {
+            postToUpdate.url = url || null;
+        }
+
+        // Update title and description
+        postToUpdate.title = title;
+        postToUpdate.description = description;
+
+        await writeData(data);
+        res.status(200).json(postToUpdate);
+
+    } catch (error) {
+        console.error("Error in PUT /posts:", error);
+        res.status(500).json({ message: "An internal server error occurred while updating the post." });
+    }
+});
 
 
 

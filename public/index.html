@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Showcase</title>
+    <title>Volvox-node</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>My Portfolio Showcase</h1>
+        <h1>Volvox-node: Progress logs</h1>
         <nav>
-            <span id="username-display" style="color: white; margin-right: 20px; padding: 5px 0;"></span>
-            <a href="/admin.html" style="margin-right:10px; color: white; text-decoration: none;">Admin Panel</a>
+            <span id="username-display" style="color: white; margin-right: 10px; padding: 5px 0;"></span>
             <button id="logout-btn" style="padding: 5px 10px; background-color: #dc3545; color:white; border:none; border-radius: 3px; cursor:pointer;">Logout</button>
+            <a href="/admin.html" style="margin-left:10px; color: white; text-decoration: none;">Admin</a>
         </nav>
     </header>
 
@@ -22,10 +22,14 @@
     </main>
 
     <footer>
-        <p>© 2023 Your Name</p>
+        <p>Adam Aldridge 2025</p>
     </footer>
 
-    <!-- Templates -->
+    <!-- =================================================================== -->
+    <!-- TEMPLATES SECTION -->
+    <!-- =================================================================== -->
+
+    <!-- Template for the main user dashboard -->
     <template id="dashboard-template">
         <div class="dashboard">
             <h2>Dashboard - <span class="current-user-subpages-title">My Subpages</span></h2>
@@ -42,6 +46,7 @@
         </div>
     </template>
 
+    <!-- Template for a single subpage item in the dashboard list -->
     <template id="subpage-item-template">
         <li class="subpage-item">
             <span class="subpage-name"></span>
@@ -52,46 +57,29 @@
         </li>
     </template>
 
+    <!-- Template for the subpage detail view (the page with the post grid) -->
     <template id="subpage-detail-template">
+        
+
         <div class="subpage-detail">
-            <button id="back-to-dashboard-btn">← Back to Dashboard</button>
-            <h2 id="subpage-title"></h2>
+
             
-            <div class="actions">
-                <h3>Add New Post</h3>
-                <form id="create-post-form" enctype="multipart/form-data">
-                <input type="text" id="new-post-title" name="title" placeholder="Post Title" required>
-                <textarea id="new-post-description" name="description" placeholder="Short Description" required></textarea>
-                <div>
-                    <label for="new-post-preview">Preview Image (Optional):</label>
-                    <input type="file" id="new-post-preview" name="previewImageFile" accept="image/*">
-                </div>
-                
-                <!-- Change 1: The 'mainFile' input is no longer required -->
-                <div>
-                    <label for="new-post-file">Upload Main File:</label>
-                    <input type="file" id="new-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm">
-                </div>
-
-                <p style="text-align: center; margin: 0.5em 0;"><em>or</em></p>
-
-                <!-- Change 2: Add the new URL input field -->
-                <div>
-                    <label for="new-post-url">Link to URL:</label>
-                    <input type="text" id="new-post-url" name="url" placeholder="https://example.com/project-page">
-                </div>
-                
-                <button type="submit">Add Post</button>
-            </form>
+            <div class="subpage-header">
+                <h2 id="subpage-title"></h2>
+                <button id="open-add-post-modal-btn">+ Add Post</button>
             </div>
-
-            <h3>Posts</h3>
+            
             <div id="post-grid" class="post-grid">
                 <!-- Posts will be rendered here -->
+        
             </div>
+
+            <button id="back-to-dashboard-btn" style="margin-top: 30px">← Back to Dashboard</button>
+
         </div>
     </template>
 
+    <!-- Template for a single post card in the grid -->
     <template id="post-item-template">
         <div class="post-card">
             <a class="post-link" href="#" target="_blank">
@@ -99,7 +87,75 @@
                 <h4 class="post-title"></h4>
                 <p class="post-description"></p>
             </a>
-            <button class="delete-post-btn">Delete Post</button>
+            <div class="post-actions">
+                <button class="edit-post-btn">Edit</button>
+                <button class="delete-post-btn">Delete</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template for the Add Post Modal -->
+    <template id="add-post-modal-template">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close-btn">×</button>
+                <h2>Add New Post</h2>
+                <form id="create-post-form" enctype="multipart/form-data">
+                    <input type="text" id="new-post-title" name="title" placeholder="Post Title" required>
+                    <textarea id="new-post-description" name="description" placeholder="Short Description" required></textarea>
+                    <div>
+                        <label for="new-post-preview">Preview Image (Optional):</label>
+                        <input type="file" id="new-post-preview" name="previewImageFile" accept="image/*">
+                    </div>
+                    <div>
+                        <label for="new-post-file">Upload Main File:</label>
+                        <input type="file" id="new-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm">
+                    </div>
+                    <p style="text-align: center; margin: 0.5em 0;"><em>or</em></p>
+                    <div>
+                        <label for="new-post-url">Link to URL:</label>
+                        <input type="text" id="new-post-url" name="url" placeholder="example.com/project-page">
+                    </div>
+                    <button type="submit">Add Post</button>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template for the Edit Post Modal -->
+    <template id="edit-post-modal-template">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close-btn">×</button>
+                <h2>Edit Post</h2>
+                <form id="edit-post-form">
+                    <input type="text" id="edit-post-title" name="title" placeholder="Post Title" required>
+                    <textarea id="edit-post-description" name="description" placeholder="Short Description" required></textarea>
+                    
+                    <div>
+                        <label for="edit-post-preview">Replace Preview Image (Optional):</label>
+                        <p class="current-file-info" id="current-preview-info"></p>
+                        <input type="file" id="edit-post-preview" name="previewImageFile" accept="image/*">
+                    </div>
+                    
+                    <hr>
+
+                    <div>
+                        <label for="edit-post-file">Replace Main File:</label>
+                        <p class="current-file-info" id="current-file-info"></p>
+                        <input type="file" id="edit-post-file" name="mainFile" accept=".pdf,image/*,.html,.htm">
+                    </div>
+
+                    <p style="text-align: center; margin: 0.5em 0;"><em>or</em></p>
+
+                    <div>
+                        <label for="edit-post-url">Update URL:</label>
+                        <input type="text" id="edit-post-url" name="url" placeholder="example.com/project-page">
+                    </div>
+                    
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
         </div>
     </template>
 
