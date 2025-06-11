@@ -3,3 +3,10 @@ node_modules/
 
 # Mac system files
 .DS_Store
+
+
+# Environment Variables
+.env
+
+
+open.command 
